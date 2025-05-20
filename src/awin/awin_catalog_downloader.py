@@ -11,8 +11,8 @@ load_dotenv()
 
 # Directories (now relative to the project root, not src)
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-LISTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'inputs', 'lists')
-INPUTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'inputs')
+LISTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'lists')
+INPUTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin')
 
 os.makedirs(LISTS_DIR, exist_ok=True)
 os.makedirs(INPUTS_DIR, exist_ok=True)
