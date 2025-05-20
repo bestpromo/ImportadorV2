@@ -66,6 +66,15 @@ def baixar_catalogos_lojas(lojas):
         except Exception as e:
             log(f"Erro ao baixar catálogo {advertiser_id} - {advertiser_name}: {e}", tipo="ERROR")
 
+def formatar_tempo(segundos):
+    minutos = int(segundos // 60)
+    horas = int(minutos // 60)
+    minutos = minutos % 60
+    if horas > 0:
+        return f"{horas}h {minutos}min"
+    else:
+        return f"{minutos}min"
+
 def main():
     inicio = datetime.now()
     log("Iniciando processo de ingestão AWIN")
@@ -88,8 +97,9 @@ def main():
 
     fim = datetime.now()
     tempo_total = (fim - inicio).total_seconds()
+    tempo_formatado = formatar_tempo(tempo_total)
     log(f"Processo finalizado")
-    log(f"Tempo total de execução: {tempo_total:.2f} segundos")
+    log(f"Tempo total de execução: {tempo_formatado}")
 
 if __name__ == "__main__":
     main()

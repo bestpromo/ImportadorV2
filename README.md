@@ -14,7 +14,7 @@ Este projeto realiza a ingestão automatizada de catálogos de produtos fornecid
 ```
 ImportadorV2/
 │
-├── data/
+├── data/             # diretório com arquivos baixados (Não versionado)  
 │   └── awin/
 │       ├── lists/    # Lista principal e logs de execução
 │       └── inputs/   # Catálogos das lojas ativas
@@ -22,7 +22,7 @@ ImportadorV2/
 ├── src/
 │   └── baixar_catalogos_awin.py
 │
-├── .env              # Variáveis sensíveis (NÃO versionar)
+├── .env              # variáveis de acesso (NÃO versionar)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
