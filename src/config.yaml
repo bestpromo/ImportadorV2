@@ -1,0 +1,9 @@
+database:
+  host: localhost
+  port: 5432
+  user: seu_usuario
+  password: sua_senha
+  dbname: importadorv2
+
+csv_folder: ../data/awin/inputs/
+batch_size: 10000
