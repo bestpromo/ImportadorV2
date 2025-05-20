@@ -53,14 +53,31 @@ def filter_active_stores(csv_path):
     return active_stores
 
 def download_store_catalogs(stores):
+    # Count how many times each advertiser_id appears
+    from collections import defaultdict
+    advertiser_count = defaultdict(int)
+    for store in stores:
+        advertiser_id = store["Advertiser ID"].strip()
+        advertiser_count[advertiser_id] += 1
+
+    # Track the current index for each advertiser_id
+    advertiser_index = defaultdict(int)
+
     for store in stores:
         advertiser_id = store["Advertiser ID"].strip()
         advertiser_name = store["Advertiser Name"].strip().replace(" ", "_")
         url = store["URL"].strip()
-        file_name = f"{TODAY}-{advertiser_id}-{advertiser_name}.csv"
+        advertiser_index[advertiser_id] += 1
+        count = advertiser_count[advertiser_id]
+
+        if count == 1:
+            file_name = f"{TODAY}-{advertiser_id}-{advertiser_name}.csv"
+        else:
+            file_name = f"{TODAY}-{advertiser_id}-{advertiser_name}-{advertiser_index[advertiser_id]}.csv"
+
         dest_csv = os.path.join(INPUTS_DIR, file_name)
         try:
-            log(f"Downloading catalog: {advertiser_id} - {advertiser_name}")
+            log(f"Downloading catalog: {advertiser_id} - {advertiser_name} ({advertiser_index[advertiser_id]}/{count})" if count > 1 else f"Downloading catalog: {advertiser_id} - {advertiser_name}")
             download_and_extract(url, dest_csv)
             log(f"Catalog saved at: {dest_csv}")
         except Exception as e:
@@ -75,9 +92,24 @@ def format_time(seconds):
     else:
         return f"{minutes}min"
 
+def clear_csv_files(directory):
+    """Delete all CSV files in the given directory (non-recursive)."""
+    for filename in os.listdir(directory):
+        if filename.endswith('.csv'):
+            file_path = os.path.join(directory, filename)
+            try:
+                os.remove(file_path)
+                log(f"Deleted old file: {file_path}")
+            except Exception as e:
+                log(f"Error deleting file {file_path}: {e}", level="ERROR")
+
 def main():
     start = datetime.now()
     log("Starting AWIN ingestion process")
+
+    # Clear all CSV files in the INPUTS_DIR and LISTS_DIR before downloading new ones
+    clear_csv_files(INPUTS_DIR)
+    clear_csv_files(LISTS_DIR)
 
     # 1. Download and extract main list
     try:
