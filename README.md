@@ -1,66 +1,66 @@
-# ImportadorV2 - Integração de Catálogo AWIN
+# ImportadorV2 - AWIN Catalog Integration
 
-Este projeto realiza a ingestão automatizada de catálogos de produtos fornecidos pela AWIN, baixando arquivos CSV compactados, filtrando lojas ativas e salvando os catálogos prontos para uso em sistemas de e-commerce.
+This project automates the ingestion of product catalogs provided by AWIN, downloading compressed CSV files, filtering active stores, and saving the catalogs ready for use in e-commerce systems.
 
-## Funcionalidades
+## Features
 
-- Baixa a lista de catálogos da AWIN (arquivo .gz), descompacta e salva como CSV.
-- Filtra apenas lojas com status **active**.
-- Baixa e descompacta os catálogos das lojas ativas.
-- Salva logs detalhados do processo.
+- Downloads the AWIN catalog list (.gz file), extracts, and saves as CSV.
+- Filters only stores with **active** status.
+- Downloads and extracts catalogs from active stores.
+- Saves detailed process logs.
 
-## Estrutura de Pastas
+## Folder Structure
 
 ```
 ImportadorV2/
 │
-├── data/             # diretório com arquivos baixados (NÃO versionar)  
+├── data/             # directory for downloaded files (DO NOT version)  
 │   └── awin/
-│       ├── lists/    # Lista principal e logs de execução
-│       └── inputs/   # Catálogos das lojas ativas
+│       ├── lists/    # Main list and execution logs
+│       └── inputs/   # Catalogs from active stores
 │
 ├── src/
-│   └── baixar_catalogos_awin.py
+│   └── awin_catalog_downloader.py
 │
-├── .env              # variáveis de acesso (NÃO versionar)
+├── .env              # access variables (DO NOT version)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-## Configuração
+## Setup
 
-1. **Clone o repositório**
-2. **Crie o arquivo `.env` na raiz do projeto:**
+1. **Clone the repository**
+2. **Create the `.env` file in the project root:**
     ```
-    AWIN_API_KEY=sua_apikey
-    AWIN_PUBLISHER_ID=seu_publisher_id
+    AWIN_API_KEY=your_apikey
+    AWIN_PUBLISHER_ID=your_publisher_id
     ```
-3. **Instale as dependências:**
+3. **Install the dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-## Execução
+## Execution
 
-Execute o script principal:
+Run the main script:
 
 ```bash
-python src/baixar_catalogos_awin.py
+python src/awin_catalog_downloader.py
 ```
 
-Acompanhe o progresso pelo terminal e pelo arquivo de log gerado em `data/awin/lists/`.
+Monitor the progress in the terminal and in the log file generated in `data/awin/lists/`.
 
-## Observações
+## Notes
 
-- O arquivo `.env` **NÃO** deve ser versionado.
-- Os arquivos baixados podem ser grandes, certifique-se de ter espaço em disco.
-- O script pode ser adaptado para rodar via cron ou orquestradores.
+- The `.env` file **MUST NOT** be versioned.
+- Downloaded files can be large, make sure you have enough disk space.
+- The script can be adapted to run via cron or orchestrators.
 
 ---
 
-## Licença
+## License
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-**Autor:** André Luiz Faustino
+**Author:** André Luiz Faustino
