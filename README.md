@@ -14,7 +14,7 @@ Este projeto realiza a ingestão automatizada de catálogos de produtos fornecid
 ```
 ImportadorV2/
 │
-├── data/             # diretório com arquivos baixados (Não versionado)  
+├── data/             # diretório com arquivos baixados (NÃO versionar)  
 │   └── awin/
 │       ├── lists/    # Lista principal e logs de execução
 │       └── inputs/   # Catálogos das lojas ativas
