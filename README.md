@@ -50,7 +50,7 @@ This project provides a Python script to import CSV product catalogs from AWIN i
 
 3. **Run the script:**
     ```bash
-    python3 [awin_catalog_importcsvs.py](http://_vscodecontentref_/0)
+    python3 awin_catalog_importcsvs.py
     ```
 
 4. **Check logs:**
