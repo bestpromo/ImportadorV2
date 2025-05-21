@@ -1,73 +1,75 @@
-# ImportadorV2 - AWIN Catalog Integration
+# AWIN Catalog Importer
 
-Automates the download, filtering, and preparation of AWIN product catalogs for use in e-commerce systems.
+This project provides a Python script to import CSV product catalogs from AWIN into a PostgreSQL database, using batch inserts and robust logging.
 
 ## Features
 
-- Downloads the AWIN catalog list (.gz), extracts, and saves as CSV.
-- Filters only stores with **active** status.
-- Downloads and extracts catalogs from active stores.
-- Generates detailed process logs.
+- **Automatic Table Recreation:**  
+  The script drops and recreates the `awin_catalogo_import_temp` table before each import, ensuring a clean state and resetting the primary key sequence.
 
-## Folder Structure
+- **Batch Import with COPY:**  
+  Uses PostgreSQL's `COPY` command for fast, batch CSV import. Batch size is configurable via `.env` (`BATCH_SIZE`, default: 5000).
 
-```
-ImportadorV2/
-│
-├── data/             # Downloaded files (DO NOT version)
-│   └── awin/         # Catalogs from active stores   
-│       └── lists/    # Main lists and execution logs
-│
-├── src/
-│   └── awin_catalog_downloader.py
-│
-├── .env              # Access variables (DO NOT version)
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+- **Partner ID Injection:**  
+  The value of `AWIN_PARTNER_ID` from `.env` is automatically inserted into the `partner_id` column for every imported row.
 
-## General Rules
+- **Column Name Normalization:**  
+  All CSV column names are converted to lowercase and `:` is replaced with `_` to match PostgreSQL conventions.
 
-- **NEVER version files in `data/` or `.env`.**
-- Always check for available disk space before running the script.
-- Execution logs are stored in `data/awin/lists/`.
-- The script can be scheduled via cron or orchestrators.
-- For new integrations or adjustments, document in the README and keep the code clean and commented.
+- **Logging with Icons:**  
+  Each run generates a log file in `data/awin/` with a timestamped name. Logs include icons for easy reading and track process start, file processing, and completion times.
 
-## Setup
+- **Environment Configuration:**  
+  All credentials and settings are managed via a `.env` file.
 
-1. **Clone the repository**
-2. **Create the `.env` file at the root:**
+## Usage
+
+1. **Configure your `.env` file:**
+
+    ```env
+    # AWIN credentials
+    AWIN_API_KEY=...
+    AWIN_PUBLISHER_ID=...
+    AWIN_PARTNER_ID=...
+
+    # Batch size (optional)
+    BATCH_SIZE=10000
+
+    # PostgreSQL credentials
+    DB_HOST=...
+    DB_PORT=5432
+    DB_USER=...
+    DB_PASSWORD=...
+    DB_DATABASE=...
     ```
-    AWIN_API_KEY=your_apikey
-    AWIN_PUBLISHER_ID=your_publisher_id
+
+2. **Place your CSV files in:**
     ```
-3. **Install dependencies:**
+    data/awin/
+    ```
+
+3. **Run the script:**
     ```bash
-    pip install -r requirements.txt
+    python3 [awin_catalog_importcsvs.py](http://_vscodecontentref_/0)
     ```
 
-## Execution
+4. **Check logs:**
+    - Log files are created in `data/awin/` with the format `DDMMYYYY_HHMMSS.log`.
+    - Logs include icons for process steps (start 🚀, file 📄, batch ✅, finish 🏁, etc).
 
-Run the main script:
+## Table Structure
 
-```bash
-python src/awin_catalog_downloader.py
+The script creates the following table on each run:
+
+```sql
+CREATE TABLE public.awin_catalogo_import_temp (
+    id serial4 NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+    partner_id int4 NULL,
+    aw_deep_link text NULL,
+    product_name text NULL,
+    ...
+    fashion_swatch text NULL,
+    CONSTRAINT awin_catalogo_import_temp_pkey PRIMARY KEY (id)
+);
 ```
-
-Follow the progress in the terminal and in the generated log.
-
-## Contribution
-
-- Follow the code standard and keep dependencies updated.
-- Describe relevant changes in this README.
-- Open clear and objective PRs.
-
----
-
-## License
-
-MIT License. See the [LICENSE](LICENSE) file for more details.
-
-**Author:** André Luiz Faustino
