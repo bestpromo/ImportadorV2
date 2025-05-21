@@ -16,8 +16,11 @@ DB_DATABASE = os.getenv("DB_DATABASE")
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", 5000))
 AWIN_PARTNER_ID = os.getenv("AWIN_PARTNER_ID")
 
-CSV_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'awin')
-LOG_DIR = CSV_DIR
+# CSV files are now in /data/awin/csv
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CSV_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'csv')
+LOG_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'log')
+os.makedirs(LOG_DIR, exist_ok=True)  # Ensure log directory exists
 LOG_FILENAME = datetime.now().strftime("%d%m%Y_%H%M%S") + ".log"
 LOG_PATH = os.path.join(LOG_DIR, LOG_FILENAME)
 
@@ -26,6 +29,7 @@ DROP TABLE IF EXISTS awin_catalogo_import_temp;
 CREATE TABLE public.awin_catalogo_import_temp (
     id serial4 NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+    imported boolean DEFAULT FALSE,
     partner_id int4 NULL,
     aw_deep_link text NULL,
     product_name text NULL,

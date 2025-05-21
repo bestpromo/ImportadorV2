@@ -12,10 +12,12 @@ load_dotenv()
 # Directories (now relative to the project root, not src)
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LISTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'lists')
-INPUTS_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin')
+CSV_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'csv')
+LOG_DIR = os.path.join(PROJECT_ROOT, 'data', 'awin', 'log')
 
 os.makedirs(LISTS_DIR, exist_ok=True)
-os.makedirs(INPUTS_DIR, exist_ok=True)
+os.makedirs(CSV_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)  # Ensure log directory exists
 
 # Configurations
 AWIN_API_KEY = os.getenv("AWIN_API_KEY")
@@ -24,7 +26,7 @@ AWIN_LIST_URL = f"https://ui.awin.com/productdata-darwin-download/publisher/{AWI
 TODAY = datetime.now().strftime("%d%m%Y")
 LIST_FILENAME = f"{TODAY}-Awin_List.csv"
 LIST_PATH = os.path.join(LISTS_DIR, LIST_FILENAME)
-LOG_PATH = os.path.join(LISTS_DIR, f"{TODAY}-execution.log")
+LOG_PATH = os.path.join(LOG_DIR, f"{TODAY}-execution.log")
 
 def log(msg, level="INFO"):
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -53,14 +55,12 @@ def filter_active_stores(csv_path):
     return active_stores
 
 def download_store_catalogs(stores):
-    # Count how many times each advertiser_id appears
     from collections import defaultdict
     advertiser_count = defaultdict(int)
     for store in stores:
         advertiser_id = store["Advertiser ID"].strip()
         advertiser_count[advertiser_id] += 1
 
-    # Track the current index for each advertiser_id
     advertiser_index = defaultdict(int)
 
     for store in stores:
@@ -75,7 +75,7 @@ def download_store_catalogs(stores):
         else:
             file_name = f"{TODAY}-{advertiser_id}-{advertiser_name}-{advertiser_index[advertiser_id]}.csv"
 
-        dest_csv = os.path.join(INPUTS_DIR, file_name)
+        dest_csv = os.path.join(CSV_DIR, file_name)
         try:
             log(f"Downloading catalog: {advertiser_id} - {advertiser_name} ({advertiser_index[advertiser_id]}/{count})" if count > 1 else f"Downloading catalog: {advertiser_id} - {advertiser_name}")
             download_and_extract(url, dest_csv)
@@ -107,8 +107,8 @@ def main():
     start = datetime.now()
     log("Starting AWIN ingestion process")
 
-    # Clear all CSV files in the INPUTS_DIR and LISTS_DIR before downloading new ones
-    clear_csv_files(INPUTS_DIR)
+    # Clear all CSV files in the CSV_DIR and LISTS_DIR before downloading new ones
+    clear_csv_files(CSV_DIR)
     clear_csv_files(LISTS_DIR)
 
     # 1. Download and extract main list
