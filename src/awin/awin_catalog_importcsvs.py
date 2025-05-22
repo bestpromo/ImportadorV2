@@ -25,106 +25,113 @@ LOG_FILENAME = datetime.now().strftime("%d%m%Y_%H%M%S") + ".log"
 LOG_PATH = os.path.join(LOG_DIR, LOG_FILENAME)
 
 TABLE_DDL = """
-DROP TABLE IF EXISTS awin_catalogo_import_temp;
-CREATE TABLE public.awin_catalogo_import_temp (
-    id serial4 NOT NULL,
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
-    imported boolean DEFAULT FALSE,
-    partner_id int4 NULL,
-    aw_deep_link text NULL,
-    product_name text NULL,
-    aw_product_id text NULL,
-    merchant_product_id text NULL,
-    merchant_image_url text NULL,
-    description text NULL,
-    merchant_category text NULL,
-    search_price text NULL,
-    merchant_name text NULL,
-    merchant_id text NULL,
-    category_name text NULL,
-    category_id text NULL,
-    aw_image_url text NULL,
-    currency text NULL,
-    store_price text NULL,
-    delivery_cost text NULL,
-    merchant_deep_link text NULL,
-    "language" text NULL,
-    last_updated text NULL,
-    display_price text NULL,
-    data_feed_id text NULL,
-    brand_name text NULL,
-    brand_id text NULL,
-    colour text NULL,
-    product_short_description text NULL,
-    specifications text NULL,
-    "condition" text NULL,
-    product_model text NULL,
-    model_number text NULL,
-    dimensions text NULL,
-    keywords text NULL,
-    promotional_text text NULL,
-    product_type text NULL,
-    commission_group text NULL,
-    merchant_product_category_path text NULL,
-    merchant_product_second_category text NULL,
-    merchant_product_third_category text NULL,
-    rrp_price text NULL,
-    saving text NULL,
-    savings_percent text NULL,
-    base_price text NULL,
-    base_price_amount text NULL,
-    base_price_text text NULL,
-    product_price_old text NULL,
-    delivery_restrictions text NULL,
-    delivery_weight text NULL,
-    warranty text NULL,
-    terms_of_contract text NULL,
-    delivery_time text NULL,
-    in_stock text NULL,
-    stock_quantity text NULL,
-    valid_from text NULL,
-    valid_to text NULL,
-    is_for_sale text NULL,
-    web_offer text NULL,
-    pre_order text NULL,
-    stock_status text NULL,
-    size_stock_status text NULL,
-    size_stock_amount text NULL,
-    merchant_thumb_url text NULL,
-    large_image text NULL,
-    alternate_image text NULL,
-    aw_thumb_url text NULL,
-    alternate_image_two text NULL,
-    alternate_image_three text NULL,
-    alternate_image_four text NULL,
-    reviews text NULL,
-    average_rating text NULL,
-    rating text NULL,
-    number_available text NULL,
-    custom_1 text NULL,
-    custom_2 text NULL,
-    custom_3 text NULL,
-    custom_4 text NULL,
-    custom_5 text NULL,
-    custom_6 text NULL,
-    custom_7 text NULL,
-    custom_8 text NULL,
-    custom_9 text NULL,
-    ean text NULL,
-    isbn text NULL,
-    upc text NULL,
-    mpn text NULL,
-    parent_product_id text NULL,
-    product_gtin text NULL,
-    basket_link text NULL,
-    fashion_suitable_for text NULL,
-    fashion_category text NULL,
-    fashion_size text NULL,
-    fashion_material text NULL,
-    fashion_pattern text NULL,
-    fashion_swatch text NULL,
-    CONSTRAINT awin_catalogo_import_temp_pkey PRIMARY KEY (id)
+DROP TABLE IF EXISTS awin_catalog_import_temp;
+CREATE TABLE awin_catalog_import_temp (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    imported BOOLEAN DEFAULT FALSE,
+    partner_id INTEGER,
+    aw_deep_link TEXT,
+    product_name TEXT,
+    aw_product_id TEXT,
+    merchant_product_id TEXT,
+    merchant_image_url TEXT,
+    description TEXT,
+    merchant_category TEXT,
+    search_price TEXT,
+    merchant_name TEXT,
+    merchant_id INTEGER,
+    category_name TEXT,
+    category_id TEXT,
+    aw_image_url TEXT,
+    currency TEXT,
+    store_price TEXT,
+    delivery_cost TEXT,
+    merchant_deep_link TEXT,
+    "language" TEXT,
+    last_updated TEXT,
+    display_price TEXT,
+    data_feed_id TEXT,
+    brand_name TEXT,
+    brand_id TEXT,
+    colour TEXT,
+    product_short_description TEXT,
+    specifications TEXT,
+    "condition" TEXT,
+    product_model TEXT,
+    model_number TEXT,
+    dimensions TEXT,
+    keywords TEXT,
+    promotional_text TEXT,
+    product_type TEXT,
+    commission_group TEXT,
+    merchant_product_category_path TEXT,
+    merchant_product_second_category TEXT,
+    merchant_product_third_category TEXT,
+    rrp_price TEXT,
+    saving TEXT,
+    savings_percent TEXT,
+    base_price TEXT,
+    base_price_amount TEXT,
+    base_price_text TEXT,
+    product_price_old TEXT,
+    delivery_restrictions TEXT,
+    delivery_weight TEXT,
+    warranty TEXT,
+    terms_of_contract TEXT,
+    delivery_time TEXT,
+    in_stock BOOLEAN,
+    stock_quantity TEXT,
+    valid_from TEXT,
+    valid_to TEXT,
+    is_for_sale BOOLEAN,
+    web_offer BOOLEAN,
+    pre_order BOOLEAN,
+    stock_status TEXT,
+    size_stock_status TEXT,
+    size_stock_amount TEXT,
+    merchant_thumb_url TEXT,
+    large_image TEXT,
+    alternate_image TEXT,
+    aw_thumb_url TEXT,
+    alternate_image_two TEXT,
+    alternate_image_three TEXT,
+    alternate_image_four TEXT,
+    reviews TEXT,
+    average_rating TEXT,
+    rating TEXT,
+    number_available TEXT,
+    custom_1 TEXT,
+    custom_2 TEXT,
+    custom_3 TEXT,
+    custom_4 TEXT,
+    custom_5 TEXT,
+    custom_6 TEXT,
+    custom_7 TEXT,
+    custom_8 TEXT,
+    custom_9 TEXT,
+    ean TEXT,
+    isbn TEXT,
+    upc TEXT,
+    mpn TEXT,
+    parent_product_id TEXT,
+    product_gtin TEXT,
+    basket_link TEXT,
+    fashion_suitable_for TEXT,
+    fashion_category TEXT,
+    fashion_size TEXT,
+    fashion_material TEXT,
+    fashion_pattern TEXT,
+    fashion_swatch TEXT
 );
+
+-- Índices para acelerar consultas frequentes
+CREATE INDEX idx_awin_imported ON awin_catalog_import_temp(imported);
+CREATE INDEX idx_awin_partner_id ON awin_catalog_import_temp(partner_id);
+CREATE INDEX idx_awin_merchant_id ON awin_catalog_import_temp(merchant_id);
+CREATE INDEX idx_awin_merchant_product_id ON awin_catalog_import_temp(merchant_product_id);
+CREATE INDEX idx_awin_aw_product_id ON awin_catalog_import_temp(aw_product_id);
+CREATE INDEX idx_awin_last_updated ON awin_catalog_import_temp(last_updated);
 """
 
 def log(msg, icon="ℹ️"):
@@ -142,11 +149,11 @@ def get_db_connection():
         dbname=DB_DATABASE
     )
 
-def recreate_awin_catalogo_import_temp(conn):
+def recreate_awin_catalog_import_temp(conn):
     with conn.cursor() as cur:
         cur.execute(TABLE_DDL)
     conn.commit()
-    log("Table awin_catalogo_import_temp dropped and recreated.", icon="🗑️")
+    log("Table awin_catalog_import_temp dropped and recreated.", icon="🗑️")
 
 def process_csv_file(filepath, conn, batch_size):
     start = time.time()
@@ -184,7 +191,7 @@ def copy_batch(conn, header, batch):
         f.seek(0)
         columns = ','.join([f'"{col}"' for col in header])
         cur.copy_expert(
-            sql=f"COPY awin_catalogo_import_temp ({columns}) FROM STDIN WITH CSV",
+            sql=f"COPY awin_catalog_import_temp ({columns}) FROM STDIN WITH CSV",
             file=f
         )
     conn.commit()
@@ -196,7 +203,7 @@ def main():
     log(f"{len(files)} CSV files found to process.", icon="📦")
     conn = get_db_connection()
     try:
-        recreate_awin_catalogo_import_temp(conn)
+        recreate_awin_catalog_import_temp(conn)
         for idx, filename in enumerate(files, 1):
             filepath = os.path.join(CSV_DIR, filename)
             log(f"({idx}/{len(files)}) Processing file: {filename}", icon="🔄")
